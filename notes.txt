@@ -1,0 +1,30 @@
+1. Generalnie najlepiej jest wziąć wytrenowaną sieć (np. ImageNet/ResNet) i dostosować ją do naszych potrzeb, tj. zmienić input i output.
+   Mimo tego, że sieć była trenowana na innych danych (np. na zdjęciach z aparatu) to i tak poradzi sobie ona lepiej niż nasza własna sieć -
+   nawet w przypadku, gdy naszym inputem są np. zdjęcia z drona.
+
+2. ResNet - meta architektura. Liczba po ResNet to liczba warstw (np. ResNet44).
+3. Sieci resydulne powstały w wyniku potrzeby większej ilości warstw - zwiększenie nieliniowości.
+4. VGG było przed ResNetem. (VGG16)
+5. Inception Network (BottleNet).
+6. Mick Jackson
+7. Regularyzacja danych - sieć może nauczyć się na pamięć. Overfitting.
+   a) generalnie chcemy mieć małe wagi. Mimo, że jest mała zmiana na wejściu to będzie duża zmiana na wyjściu - w przypadku dużych wag.
+      gdy minimalizujemy loss function, dodatkowo będziemy minimalizować wagi.
+
+   Inna forma regularyzacji to dropout. Eliminujemy sytuacje w ktorych neurony kopiuja inne neurony. Odchodzi się od tej metody na podstawie
+   wyników empirycznych.
+
+   Najlepszym sposobem regularyzacji jest zwiększenie datasetu.
+
+   Image augmentation - np. jak mamy obrazek szóstki to robimy na niej różne transformacje, przewracamy, blur etc.
+
+   Preprocessing - image whitening, centrowanie w 0 - czyli odejmowanie od kazdego pixela 127.
+
+   Batch normalization - najprostszy sposob jest taki, ze poprawiamy globalna srednia i odchylenie standardowe
+
+YOLO, YOLO9000 - do detekcji twarzy.
+
+model.summary()
+
+image segmentation - fully convluitional network lub (atus) konwolucja z dziurami
+transpose convolution - keras.Conv2DTranspose - może być użyte do detekcji twarzy.
