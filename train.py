@@ -51,8 +51,7 @@ def main():
         zoom_range=[1, 1.15],
         rotation_range=15,
         width_shift_range=0.1,
-        fill_mode='wrap',
-        brightness_range=(0.5, 1)
+        fill_mode='wrap'
     )
     train_generator = train_datagen.flow_from_directory(
         TRAIN_DIR,
@@ -68,8 +67,7 @@ def main():
         target_size=(IMG_WIDTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
         class_mode='categorical',
-        shuffle=True,
-        save_to_dir="./augmented"
+        shuffle=True
     )
 
     earlyStopping = EarlyStopping(
