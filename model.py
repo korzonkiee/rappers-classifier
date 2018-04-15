@@ -14,14 +14,7 @@ class CNNModelBuilder(object):
     """ CNN model class"""
 
     def build(self, input_shape, num_classes):
-        base_model = ResNet50(
-            weights='imagenet',
-            include_top=False,
-            input_shape=input_shape
-        )
-
-        for layer in base_model.layers:
-            layer.trainable = False
+        base_model = ResNet50(weights='imagenet', include_top=False, input_shape=input_shape)
 
         x = Flatten()(base_model.output)
         x = Dense(128, activation='relu')(x)

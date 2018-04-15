@@ -11,10 +11,10 @@ import math
 
 from model import CNNModelBuilder
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import EarlyStopping, CSVLogger
+from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 
-TRAIN_DIR = "./data/train"
-VALID_DIR = "./data/valid"
+TRAIN_DIR = "/data/train"
+VALID_DIR = "/data/validation"
 
 # Number of output classes.
 NUM_CLASSES = 4
@@ -24,10 +24,10 @@ NUM_CLASSES = 4
 BATCH_SIZE = 32
 
 # Number of epochs
-NUM_EPOCHS = 100
+NUM_EPOCHS = 20
 
-IMG_WIDTH = 224
-IMG_HEIGHT = 224
+IMG_WIDTH = 197
+IMG_HEIGHT = 197
 
 
 def main():
@@ -47,7 +47,12 @@ def main():
 
     train_datagen = ImageDataGenerator(
         rescale=1. / 255,
-        horizontal_flip=True
+        horizontal_flip=True,
+        zoom_range=[1, 1.15],
+        rotation_range=15,
+        width_shift_range=0.1,
+        fill_mode='wrap',
+        brightness_range=(0.5, 1)
     )
     train_generator = train_datagen.flow_from_directory(
         TRAIN_DIR,
@@ -63,7 +68,8 @@ def main():
         target_size=(IMG_WIDTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
         class_mode='categorical',
-        shuffle=True
+        shuffle=True,
+        save_to_dir="./augmented"
     )
 
     earlyStopping = EarlyStopping(
@@ -77,12 +83,15 @@ def main():
         filename='training.log'
     )
 
+    checkpointer = ModelCheckpoint('model_best.h5', verbose=1, save_best_only=True)
+
     model.fit_generator(
         train_generator,
         steps_per_epoch=num_train_steps,
         epochs=NUM_EPOCHS,
         validation_data=valid_generator,
-        callbacks=[earlyStopping, csvLogger]
+        validation_steps=num_valid_steps,
+        callbacks=[earlyStopping, csvLogger, checkpointer]
     )
 
     model.save('model_resnet.h5')
