@@ -47,7 +47,7 @@ def main():
     x /= 255.
     x = np.expand_dims(x, axis=0)
 
-    model = load_model("./model_new_new.h5")
+    model = load_model("/output/model_new_new.h5")
     res = model.predict(x)
 
     print(res)

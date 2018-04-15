@@ -78,10 +78,10 @@ def main():
         mode='auto')
 
     csvLogger = CSVLogger(
-        filename='training.log'
+        filename='/output/training.log'
     )
 
-    checkpointer = ModelCheckpoint('model_best.h5', verbose=1, save_best_only=True)
+    checkpointer = ModelCheckpoint('/output/model_checkpoint.h5', verbose=1, save_best_only=True)
 
     model.fit_generator(
         train_generator,
@@ -92,7 +92,7 @@ def main():
         callbacks=[earlyStopping, csvLogger, checkpointer]
     )
 
-    model.save('model_resnet.h5')
+    model.save('/output/model_resnet.h5')
 
 
 if __name__ == "__main__":
