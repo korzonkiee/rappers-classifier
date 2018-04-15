@@ -5,31 +5,27 @@ by Maciej Korzeniewski
 14.04.2018
 """
 
-from keras.layers import Input, Conv2D, MaxPool2D, Flatten, Dense, Activation
-from keras.models import Model, Sequential
+from keras.layers import Flatten, Dense
+from keras.models import Model
+from keras.applications import ResNet50
 
 
-class CNNModel(Sequential):
-
+class CNNModelBuilder(object):
     """ CNN model class"""
 
-    def __init__(self, input_shape, num_classes):
-        Sequential.__init__(self)
+    def build(self, input_shape, num_classes):
+        base_model = ResNet50(
+            weights='imagenet',
+            include_top=False,
+            input_shape=input_shape
+        )
 
-        self.add(Conv2D(32, (3, 3), padding='same',
-                        activation='relu', input_shape=input_shape))
-        self.add(Conv2D(32, (3, 3), padding='same',
-                        activation='relu', input_shape=input_shape))
-        self.add(MaxPool2D((2, 2)))
+        for layer in base_model.layers:
+            layer.trainable = False
 
-        self.add(Conv2D(32, (3, 3), padding='same',
-                        activation='relu', input_shape=input_shape))
-        self.add(Conv2D(32, (3, 3), padding='same',
-                        activation='relu', input_shape=input_shape))
-        self.add(MaxPool2D((2, 2)))
+        x = Flatten()(base_model.output)
+        x = Dense(128, activation='relu')(x)
+        predictions = Dense(num_classes, activation='softmax')(x)
 
-        self.add(Flatten())
-        self.add(Dense(128, activation='relu'))
-        self.add(Dense(128, activation='relu'))
+        return Model(inputs=base_model.input, outputs=predictions)
 
-        self.add(Dense(num_classes, activation='softmax'))
